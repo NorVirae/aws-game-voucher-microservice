@@ -69,6 +69,31 @@
             "related": ".xml"
           }
         }
+      },
+      "PlayFabAllSDK/1.160.230804": {
+        "type": "package",
+        "dependencies": {
+          "Polly": "7.2.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/PlayFabAllSDK.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/PlayFabAllSDK.dll": {}
+        }
+      },
+      "Polly/7.2.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Polly.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Polly.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
       }
     }
   },
@@ -189,6 +214,44 @@
         "newtonsoft.json.nuspec",
         "packageIcon.png"
       ]
+    },
+    "PlayFabAllSDK/1.160.230804": {
+      "sha512": "NNoK8mjI2y/P+TgfT5nQhgFT1Z6Z5nN/GJB76OsRC0SIIv+gMl/WQXo9uEce3lo4P6ebXnJOqdY8ZhHt4R/AQg==",
+      "type": "package",
+      "path": "playfaballsdk/1.160.230804",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "icon.png",
+        "lib/netstandard2.0/PlayFabAllSDK.dll",
+        "playfaballsdk.1.160.230804.nupkg.sha512",
+        "playfaballsdk.nuspec"
+      ]
+    },
+    "Polly/7.2.3": {
+      "sha512": "DeCY0OFbNdNxsjntr1gTXHJ5pKUwYzp04Er2LLeN3g6pWhffsGuKVfMBLe1lw7x76HrPkLxKEFxBlpRxS2nDEQ==",
+      "type": "package",
+      "path": "polly/7.2.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Polly.png",
+        "lib/net461/Polly.dll",
+        "lib/net461/Polly.pdb",
+        "lib/net461/Polly.xml",
+        "lib/net472/Polly.dll",
+        "lib/net472/Polly.pdb",
+        "lib/net472/Polly.xml",
+        "lib/netstandard1.1/Polly.dll",
+        "lib/netstandard1.1/Polly.pdb",
+        "lib/netstandard1.1/Polly.xml",
+        "lib/netstandard2.0/Polly.dll",
+        "lib/netstandard2.0/Polly.pdb",
+        "lib/netstandard2.0/Polly.xml",
+        "polly.7.2.3.nupkg.sha512",
+        "polly.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -196,7 +259,8 @@
       "AWSSDK.DynamoDBv2 >= 3.7.200.19",
       "Amazon.Lambda.APIGatewayEvents >= 2.6.0",
       "Amazon.Lambda.Core >= 2.1.0",
-      "Newtonsoft.Json >= 13.0.3"
+      "Newtonsoft.Json >= 13.0.3",
+      "PlayFabAllSDK >= 1.160.230804"
     ]
   },
   "packageFolders": {
@@ -253,6 +317,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.3, )"
+          },
+          "PlayFabAllSDK": {
+            "target": "Package",
+            "version": "[1.160.230804, )"
           }
         },
         "imports": [

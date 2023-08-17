@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6OSAYy5RSH1VyCx0+LcgoeMCg0vsh9V4lho4ucXSaCtAE665Zs4FaIKBiSz/FxwXk0V5C/gfXq4UaqDHfN9Cuw==",
+  "dgSpecHash": "8+MusJBtMu2N+c711A43xngDiZnZRq/lLGajDGOA2GmCW5+tVh3cf37sxaNixasROnW6C0PRMKDD12JP0L1JxQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\norbe\\Documents\\Blackhards\\ServerMicroServices\\blackhards-game-sale\\AwsGameVoucherSystem\\AwsGameVoucherSystem.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,9 @@
     "C:\\Users\\norbe\\.nuget\\packages\\amazon.lambda.core\\2.1.0\\amazon.lambda.core.2.1.0.nupkg.sha512",
     "C:\\Users\\norbe\\.nuget\\packages\\awssdk.core\\3.7.200.18\\awssdk.core.3.7.200.18.nupkg.sha512",
     "C:\\Users\\norbe\\.nuget\\packages\\awssdk.dynamodbv2\\3.7.200.19\\awssdk.dynamodbv2.3.7.200.19.nupkg.sha512",
-    "C:\\Users\\norbe\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+    "C:\\Users\\norbe\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\norbe\\.nuget\\packages\\playfaballsdk\\1.160.230804\\playfaballsdk.1.160.230804.nupkg.sha512",
+    "C:\\Users\\norbe\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512"
   ],
   "logs": []
 }
