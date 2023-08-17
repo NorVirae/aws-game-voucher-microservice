@@ -20,6 +20,7 @@ namespace AwsGameVoucherSystem
         public string Id;
         public string VoucherCode;
         public int VoucherGoldQuantity;
+        public bool isConsumed;
         public DateTime CreationDate;
         public DateTime Expiry;
     }
