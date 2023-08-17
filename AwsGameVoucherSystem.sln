@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsGameVoucherSystem", "AwsGameVoucherSystem.csproj", "{1A4AF89B-D637-4EA9-9085-0BE5F043B8BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1A4AF89B-D637-4EA9-9085-0BE5F043B8BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A4AF89B-D637-4EA9-9085-0BE5F043B8BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A4AF89B-D637-4EA9-9085-0BE5F043B8BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A4AF89B-D637-4EA9-9085-0BE5F043B8BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A2C952F-557F-4D09-BB63-2220D973372A}
+	EndGlobalSection
+EndGlobal
