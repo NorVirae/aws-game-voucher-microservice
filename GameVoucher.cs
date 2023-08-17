@@ -49,13 +49,14 @@ namespace AwsGameVoucherSystem
                 }
                 else
                 {
-                    response.Body = JsonConvert.SerializeObject(new { Error = "Failed: Unable to generate voucher code" });
-
+                    response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Failed: Unable to generate voucher code" });
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }
             }
             catch (Exception ex)
             {
-                response.Body = JsonConvert.SerializeObject(new { Error = ex.Message });
+                response.Body = JsonConvert.SerializeObject(new {Success = false, Error = ex.Message });
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
             }
 
             return response;
@@ -85,7 +86,7 @@ namespace AwsGameVoucherSystem
                     var bodyContent = JsonConvert.DeserializeObject<ConsumeVoucherRequest>(request.Body);
 
                     GetPlayFabTitleData((Dictionary<string, Voucher> voucherData) => {
-                        if (voucherData != null)
+                        if (voucherData != null && voucherData[bodyContent.VoucherCode] != null)
                         {
                             var newVoucherData = voucherData;
                             var targetVoucher = newVoucherData[bodyContent.VoucherCode];
