@@ -13,16 +13,26 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 namespace AwsGameVoucherSystem
 {
     public class GameVoucher
     {
+
+        private void Init()
+        {
+            PlayFabSettings.staticSettings.DeveloperSecretKey = "Z85MNMYUMKHD8HA66JTIFT1UKSOWGBUWETZABX6CJ7O7UWQDCM";
+            PlayFabSettings.staticSettings.TitleId = "10f24";
+
+        }
         public async Task<APIGatewayProxyResponse> PurchaseVoucher(APIGatewayProxyRequest request, ILambdaContext context)
         {
+            Init();
             var response = new APIGatewayProxyResponse()
             {
                 Headers = new Dictionary<string, string>(),
-                StatusCode = 200
+                StatusCode = 200,
+                Body = "Its Empty"
             };
 
             response.Headers.Add("Access-Control-Allow-Origin", "*");
@@ -32,37 +42,38 @@ namespace AwsGameVoucherSystem
 
             //var bodyContent = request.IsBase64Encoded ? Convert.FromBase64String(request.Body) : Encoding.UTF8.GetBytes(request.Body);
             //using var memStream = new MemoryStream(bodyContent);
-            var dbRegion = Environment.GetEnvironmentVariable("DB_REGION");
-            var dbClient = new AmazonDynamoDBClient(RegionEndpoint.GetBySystemName(dbRegion));
+            //var dbRegion = Environment.GetEnvironmentVariable("DB_REGION");
+            //var dbClient = new AmazonDynamoDBClient(RegionEndpoint.GetBySystemName(dbRegion));
             try
             {
-                if (request.Body != null)
+                Console.WriteLine(request.Body + " CHECk");
+                if (request.Body != null && request.Body != "")
                 {
                     var bodyContent = JsonConvert.DeserializeObject<Vouchers>(request.Body);
-                    GenerateAndStoreVoucher(bodyContent.Email, bodyContent.GoldQuantity, (bool success, string voucherCode) =>
-                    {
-                        response.Body = JsonConvert.SerializeObject(new { Email = bodyContent.Email, VoucherCode = voucherCode });
-
-                    });
-
+                   var resultData = await GenerateAndStoreVoucher(bodyContent.Email, bodyContent.GoldQuantity);
+                    response.Body = JsonConvert.SerializeObject(new { Email = bodyContent.Email, VoucherCode = resultData.voucherCode });
 
                 }
                 else
                 {
-                    response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Failed: Unable to generate voucher code" });
+                    response.Body = JsonConvert.SerializeObject(new { Success = false, ErrorBody = request.Body, Error = "Failed: Unable to generate voucher code, Email or VoucherGoldQuantity empty" });
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }
+                return response;
             }
             catch (Exception ex)
             {
                 response.Body = JsonConvert.SerializeObject(new {Success = false, Error = ex.Message });
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return response;
             }
 
-            return response;
+            
         }
-        public async Task<APIGatewayProxyResponse> ConsumeVoucher(APIGatewayProxyRequest request)
+        public async Task<APIGatewayProxyResponse> RedeemVoucher(APIGatewayProxyRequest request)
         {
+            Init();
+
             var response = new APIGatewayProxyResponse()
             {
                 Headers = new Dictionary<string, string>(),
@@ -76,8 +87,8 @@ namespace AwsGameVoucherSystem
 
             //var bodyContent = request.IsBase64Encoded ? Convert.FromBase64String(request.Body) : Encoding.UTF8.GetBytes(request.Body);
             //using var memStream = new MemoryStream(bodyContent);
-            var dbRegion = Environment.GetEnvironmentVariable("DB_REGION");
-            var dbClient = new AmazonDynamoDBClient(RegionEndpoint.GetBySystemName(dbRegion));
+            //var dbRegion = Environment.GetEnvironmentVariable("DB_REGION");
+            //var dbClient = new AmazonDynamoDBClient(RegionEndpoint.GetBySystemName(dbRegion));
             
             try
             {
@@ -85,29 +96,27 @@ namespace AwsGameVoucherSystem
                 {
                     var bodyContent = JsonConvert.DeserializeObject<ConsumeVoucherRequest>(request.Body);
 
-                    GetPlayFabTitleData((Dictionary<string, Voucher> voucherData) => {
-                        if (voucherData != null && voucherData[bodyContent.VoucherCode] != null)
+                    var voucherData = await GetPlayFabTitleData();
+                    if (voucherData != null && voucherData.Data != null)
+                    {
+                        var newVoucherData = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherData.Data["vouchers"]);
+                        var targetVoucher = newVoucherData[bodyContent.VoucherCode];
+                        targetVoucher.isConsumed = true;
+                        newVoucherData[bodyContent.VoucherCode] = targetVoucher;
+
+                        var success = await SetPlayFabTitleDataMulti(newVoucherData);
+                        if (success)
                         {
-                            var newVoucherData = voucherData;
-                            var targetVoucher = newVoucherData[bodyContent.VoucherCode];
-                            targetVoucher.isConsumed = true;
-                            newVoucherData[bodyContent.VoucherCode] = targetVoucher;
-
-                            SetPlayFabTitleDataMulti(newVoucherData, (bool success) =>
-                            {
-                                if (success)
-                                {
-                                    response.Body = JsonConvert.SerializeObject(new { Success = true, Message = "Voucher has been consumed and used" });
-                                }
-                                else
-                                {
-                                    response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Unable to consume voucher" });
-                                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                                }
-                            });
+                            response.Body = JsonConvert.SerializeObject(new { Success = true, Message = "Voucher has been consumed and used" });
                         }
+                        else
+                        {
+                            response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Unable to consume voucher" });
+                            response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        }
+                    }
 
-                    });
+                    
                 }
             }
             catch (Exception ex)
@@ -118,7 +127,7 @@ namespace AwsGameVoucherSystem
             return response;
         }
 
-        private void GenerateAndStoreVoucher(string email, int goldQuantity, Action<bool, string> callback) 
+        private async Task<VoucherGenerationResponse> GenerateAndStoreVoucher(string email, int goldQuantity) 
         {
             var newVoucherIdCode = Guid.NewGuid().ToString();
             var voucher = new Voucher()
@@ -133,74 +142,66 @@ namespace AwsGameVoucherSystem
 
             };
 
-            SetPlayFabTitleDataSingle(voucher, (bool success) =>
+            var result = await SetPlayFabTitleDataSingle(voucher);
+
+            if (result)
             {
-                if (success)
-                {
-                    callback.Invoke(true, newVoucherIdCode);
-                }
-                else
-                {
-                    callback.Invoke(false, newVoucherIdCode);
-                }
-            });
+                return new VoucherGenerationResponse { success = true, voucherCode = newVoucherIdCode };
+            }
+            else
+            {
+                return new VoucherGenerationResponse { success = false, voucherCode = "" };
+
+            }
         }
 
 
-        private async void GetPlayFabTitleData(Action<Dictionary<string, Voucher>> callback)
+        private async Task<GetTitleDataResult> GetPlayFabTitleData()
         {
             var keys = new List<string> { "vouchers"};
             var result = await PlayFabAdminAPI.GetTitleDataAsync(new GetTitleDataRequest() { Keys = keys });
-            if (result != null && result.Result != null)
-            {
-                var voucherObject = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(result.Result.Data["voucher"]);
-                callback.Invoke(voucherObject);
 
-            }
-            else
-            {
-                callback.Invoke(null);
-            }
+            return result.Result;
         }
-        private void SetPlayFabTitleDataSingle(Voucher voucher, Action<bool> callback)
-        {
-            GetPlayFabTitleData((Dictionary<string, Voucher> voucherData) =>
-            {
-                if (voucherData != null)
-                {
-                    string stringIdOrVoucherCode = Guid.NewGuid().ToString();
-                    
-                    var newModifiedVoucherData = voucherData;
-                    newModifiedVoucherData.Add(stringIdOrVoucherCode, voucher);
-                    var keys = new List<string> { "vouchers" };
-                    var result = PlayFabAdminAPI.SetTitleDataAsync(new SetTitleDataRequest() { Key = "Voucher", Value = JsonConvert.SerializeObject(newModifiedVoucherData) });
-                    if (result != null && result.Result != null)
-                    {
-                        callback.Invoke(true);
 
-                    }
-                    else
-                    {
-                        callback.Invoke(false);
-                    }
+
+        private async Task<bool> SetPlayFabTitleDataSingle(Voucher voucher)
+        {
+            var voucherData = await GetPlayFabTitleData();
+
+            var voucherDataProcessed = voucherData.Data;
+            if (voucherData != null && voucherDataProcessed != null)
+            {
+                var VoucherDataDesirialised = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherDataProcessed["vouchers"]);
+                string stringIdOrVoucherCode = Guid.NewGuid().ToString();
+
+                var newModifiedVoucherData = VoucherDataDesirialised;
+                newModifiedVoucherData?.Add(stringIdOrVoucherCode, voucher);
+                var result = await PlayFabAdminAPI.SetTitleDataAsync(new SetTitleDataRequest() { Key = "vouchers", Value = JsonConvert.SerializeObject(newModifiedVoucherData) });
+                if (result != null && result.Result != null)
+                {
+                    return true;
                 }
                 else
                 {
-                    callback.Invoke(false);
+                    return false;
                 }
-            });
+            }
+
+            return false;
+            
         }
 
-        private void SetPlayFabTitleDataMulti(Dictionary<string, Voucher> vouchers, Action<bool> callback)
+        private async Task<bool> SetPlayFabTitleDataMulti(Dictionary<string, Voucher> vouchers)
         {
-            var result = PlayFabAdminAPI.SetTitleDataAsync(new SetTitleDataRequest() { Key = "vouchers", Value = JsonConvert.SerializeObject(vouchers) });
+            var result = await PlayFabAdminAPI.SetTitleDataAsync(new SetTitleDataRequest() { Key = "vouchers", Value = JsonConvert.SerializeObject(vouchers) });
             if (result != null && result.Result != null)
             {
-                callback.Invoke(true);
+                return true;
             }
             else
             {
-                callback.Invoke(false);
+                return false;
             }
         }
     }

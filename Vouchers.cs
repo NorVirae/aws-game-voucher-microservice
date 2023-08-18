@@ -30,4 +30,10 @@ namespace AwsGameVoucherSystem
         public string VoucherCode;
     }
 
+
+    public class VoucherGenerationResponse
+    {
+        public bool success;
+        public string voucherCode;
+    }
 }

@@ -1,0 +1,14 @@
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\linux-x64\AwsGameVoucherSystem.deps.json
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\linux-x64\AwsGameVoucherSystem.runtimeconfig.json
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\linux-x64\AwsGameVoucherSystem.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\linux-x64\AwsGameVoucherSystem.pdb
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.csproj.AssemblyReference.cache
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.AssemblyInfoInputs.cache
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.AssemblyInfo.cs
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.csproj.CoreCompileInputs.cache
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\refint\AwsGameVoucherSystem.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.pdb
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\AwsGameVoucherSystem.genruntimeconfig.cache
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\obj\Release\net6.0\linux-x64\ref\AwsGameVoucherSystem.dll

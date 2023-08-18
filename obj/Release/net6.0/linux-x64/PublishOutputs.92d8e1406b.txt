@@ -1,0 +1,12 @@
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\AwsGameVoucherSystem.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\AwsGameVoucherSystem.deps.json
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\AwsGameVoucherSystem.runtimeconfig.json
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\AwsGameVoucherSystem.pdb
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\Amazon.Lambda.APIGatewayEvents.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\Amazon.Lambda.Core.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\Amazon.Lambda.Serialization.SystemTextJson.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\AWSSDK.Core.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\AWSSDK.DynamoDBv2.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\Newtonsoft.Json.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\PlayFabAllSDK.dll
+C:\Users\norbe\Documents\Blackhards\ServerMicroServices\blackhards-game-sale\AwsGameVoucherSystem\bin\Release\net6.0\publish\Polly.dll
