@@ -99,7 +99,15 @@ namespace AwsGameVoucherSystem
                     var voucherData = await GetPlayFabTitleData();
                     if (voucherData != null && voucherData.Data != null)
                     {
-                        var newVoucherData = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherData.Data["vouchers"]);
+                        Dictionary<string, Voucher> newVoucherData;
+                        //run migrations
+                        if (voucherData.Data.ContainsKey("vouchers")){
+                            newVoucherData = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherData.Data["vouchers"]);
+                        }
+                        else
+                        {
+                            newVoucherData = new Dictionary<string, Voucher>();
+                        }
                         var targetVoucher = newVoucherData[bodyContent.VoucherCode];
                         targetVoucher.isConsumed = true;
                         newVoucherData[bodyContent.VoucherCode] = targetVoucher;
@@ -172,10 +180,20 @@ namespace AwsGameVoucherSystem
             var voucherDataProcessed = voucherData.Data;
             if (voucherData != null && voucherDataProcessed != null)
             {
-                var VoucherDataDesirialised = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherDataProcessed["vouchers"]);
+                Dictionary<string, Voucher> VoucherDataDeserialised;
+
+                //implement Playfab data migration if key doesn't exist crete one
+                if (voucherDataProcessed.ContainsKey("vouchers"))
+                {
+                    VoucherDataDeserialised = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherDataProcessed["vouchers"]);
+                }
+                else
+                {
+                    VoucherDataDeserialised = new Dictionary<string, Voucher>();
+                }
                 string stringIdOrVoucherCode = Guid.NewGuid().ToString();
 
-                var newModifiedVoucherData = VoucherDataDesirialised;
+                var newModifiedVoucherData = VoucherDataDeserialised;
                 newModifiedVoucherData?.Add(stringIdOrVoucherCode, voucher);
                 var result = await PlayFabAdminAPI.SetTitleDataAsync(new SetTitleDataRequest() { Key = "vouchers", Value = JsonConvert.SerializeObject(newModifiedVoucherData) });
                 if (result != null && result.Result != null)
