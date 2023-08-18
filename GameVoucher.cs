@@ -104,24 +104,34 @@ namespace AwsGameVoucherSystem
                         //run migrations
                         if (voucherData.Data.ContainsKey("vouchers")){
                             newVoucherData = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherData.Data["vouchers"]);
-                            var targetVoucher = newVoucherData[bodyContent.VoucherCode];
-                            targetVoucher.isConsumed = true;
-                            newVoucherData[bodyContent.VoucherCode] = targetVoucher;
 
-                            var success = await SetPlayFabTitleDataMulti(newVoucherData);
-                            if (success)
+                            
+
+                            if (newVoucherData.ContainsKey(bodyContent.VoucherCode))
                             {
-                                response.Body = JsonConvert.SerializeObject(new { Success = true, Message = "Voucher has been consumed and used" });
+                                var targetVoucher = newVoucherData[bodyContent.VoucherCode];
+                                targetVoucher.isConsumed = true;
+                                newVoucherData[bodyContent.VoucherCode] = targetVoucher;
+                                var success = await SetPlayFabTitleDataMulti(newVoucherData);
+                                if (success)
+                                {
+                                    response.Body = JsonConvert.SerializeObject(new { Success = true, Message = "Voucher has been consumed and used" });
+                                }
+                                else
+                                {
+                                    response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Unable to consume voucher" });
+                                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                                }
                             }
                             else
                             {
-                                response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Unable to consume voucher" });
+                                response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Failed: Voucher has been used or doesn't exist!" });
                                 response.StatusCode = (int)HttpStatusCode.BadRequest;
                             }
                         }
                         else
                         {
-                            response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Failed: Voucher has been used or doesn't exist!" });
+                            response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Failed: Voucher Does not exist!" });
                             response.StatusCode = (int)HttpStatusCode.BadRequest;
                         }
                     }
@@ -151,7 +161,7 @@ namespace AwsGameVoucherSystem
 
             };
 
-            var result = await SetPlayFabTitleDataSingle(voucher);
+            var result = await SetPlayFabTitleDataSingle(voucher, newVoucherIdCode);
 
             if (result)
             {
@@ -174,7 +184,7 @@ namespace AwsGameVoucherSystem
         }
 
 
-        private async Task<bool> SetPlayFabTitleDataSingle(Voucher voucher)
+        private async Task<bool> SetPlayFabTitleDataSingle(Voucher voucher, string voucherKey)
         {
             var voucherData = await GetPlayFabTitleData();
 
@@ -192,10 +202,9 @@ namespace AwsGameVoucherSystem
                 {
                     VoucherDataDeserialised = new Dictionary<string, Voucher>();
                 }
-                string stringIdOrVoucherCode = Guid.NewGuid().ToString();
 
                 var newModifiedVoucherData = VoucherDataDeserialised;
-                newModifiedVoucherData?.Add(stringIdOrVoucherCode, voucher);
+                newModifiedVoucherData?.Add(voucherKey, voucher);
                 var result = await PlayFabAdminAPI.SetTitleDataAsync(new SetTitleDataRequest() { Key = "vouchers", Value = JsonConvert.SerializeObject(newModifiedVoucherData) });
                 if (result != null && result.Result != null)
                 {
