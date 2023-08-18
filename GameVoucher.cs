@@ -100,36 +100,37 @@ namespace AwsGameVoucherSystem
                     if (voucherData != null && voucherData.Data != null)
                     {
                         Dictionary<string, Voucher> newVoucherData;
+
                         //run migrations
                         if (voucherData.Data.ContainsKey("vouchers")){
                             newVoucherData = JsonConvert.DeserializeObject<Dictionary<string, Voucher>>(voucherData.Data["vouchers"]);
-                        }
-                        else
-                        {
-                            newVoucherData = new Dictionary<string, Voucher>();
-                        }
-                        var targetVoucher = newVoucherData[bodyContent.VoucherCode];
-                        targetVoucher.isConsumed = true;
-                        newVoucherData[bodyContent.VoucherCode] = targetVoucher;
+                            var targetVoucher = newVoucherData[bodyContent.VoucherCode];
+                            targetVoucher.isConsumed = true;
+                            newVoucherData[bodyContent.VoucherCode] = targetVoucher;
 
-                        var success = await SetPlayFabTitleDataMulti(newVoucherData);
-                        if (success)
-                        {
-                            response.Body = JsonConvert.SerializeObject(new { Success = true, Message = "Voucher has been consumed and used" });
+                            var success = await SetPlayFabTitleDataMulti(newVoucherData);
+                            if (success)
+                            {
+                                response.Body = JsonConvert.SerializeObject(new { Success = true, Message = "Voucher has been consumed and used" });
+                            }
+                            else
+                            {
+                                response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Unable to consume voucher" });
+                                response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            }
                         }
                         else
                         {
-                            response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Unable to consume voucher" });
+                            response.Body = JsonConvert.SerializeObject(new { Success = false, Error = "Failed: Voucher has been used or doesn't exist!" });
                             response.StatusCode = (int)HttpStatusCode.BadRequest;
                         }
                     }
-
-                    
                 }
             }
             catch (Exception ex)
             {
                 response.Body = JsonConvert.SerializeObject(new { Error = ex.Message });
+                response.StatusCode = (int)HttpStatusCode.OK;
             }
 
             return response;
