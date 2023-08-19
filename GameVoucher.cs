@@ -115,7 +115,11 @@ namespace AwsGameVoucherSystem
                                 var success = await SetPlayFabTitleDataMulti(newVoucherData);
                                 if (success)
                                 {
-                                    response.Body = JsonConvert.SerializeObject(new { Success = true, Message = "Voucher has been consumed and used" });
+                                    response.Body = JsonConvert.SerializeObject(new { Success = true,
+                                        Message = "Voucher has been consumed and used",
+                                        VoucherCode= bodyContent.VoucherCode,
+                                        GoldQuantity = targetVoucher .VoucherGoldQuantity
+                                    });
                                 }
                                 else
                                 {
